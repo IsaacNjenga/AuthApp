@@ -350,9 +350,7 @@ function Auth() {
                             visible ? (
                               <EyeTwoTone style={{ color: "white" }} />
                             ) : (
-                              <EyeInvisibleOutlined
-                                style={{ color: "white" }}
-                              />
+                              <EyeInvisibleOutlined style={{ color: "#333" }} />
                             )
                           }
                           onChange={(e) =>
@@ -396,9 +394,7 @@ function Auth() {
                             visible ? (
                               <EyeTwoTone style={{ color: "white" }} />
                             ) : (
-                              <EyeInvisibleOutlined
-                                style={{ color: "white" }}
-                              />
+                              <EyeInvisibleOutlined style={{ color: "#333" }} />
                             )
                           }
                           style={inputStyle}

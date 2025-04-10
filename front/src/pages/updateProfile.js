@@ -237,7 +237,7 @@ function UpdateProfile() {
                     borderRadius: 8,
                   }}
                 >
-                  Update
+                  {loading ? "Updating" : "Update"}
                 </Button>
                 <Button
                   style={{
