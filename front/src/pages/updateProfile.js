@@ -103,7 +103,7 @@ function UpdateProfile() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "40px 20px",
+        padding: "40px 5px",
       }}
     >
       <Card
@@ -113,7 +113,7 @@ function UpdateProfile() {
           maxWidth: 700,
           width: "100%",
           borderRadius: 20,
-          padding: 22,
+          padding: 5,
         }}
       >
         <Divider style={{ borderColor: "#4f46e5" }}>

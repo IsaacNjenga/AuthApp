@@ -125,7 +125,7 @@ function Home() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "40px 20px",
+        padding: "40px 5px",
       }}
     >
       <Card
@@ -135,7 +135,7 @@ function Home() {
           maxWidth: 700,
           width: "100%",
           borderRadius: 20,
-          padding: 22,
+          padding: 5,
         }}
         title={
           <div
