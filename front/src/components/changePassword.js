@@ -1,8 +1,26 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { Button, Card, Form, Input, Popover, Space } from "antd";
+import { Button, Card, Divider, Form, Input, Popover, Space } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+
+const inputStyle = {
+  backgroundColor: "#fff",
+  border: "1px solid #ccc",
+  height: 40,
+  fontSize: 14,
+  color: "#333",
+  fontFamily: "Roboto",
+  borderRadius: 8,
+  paddingLeft: 10,
+};
+
+const labelStyle = {
+  color: "#111827",
+  fontSize: 16,
+  fontWeight: 500,
+  fontFamily: "Raleway",
+};
 
 function ChangePassword({ setOpen }) {
   const [loading, setLoading] = useState(false);
@@ -38,7 +56,17 @@ function ChangePassword({ setOpen }) {
         Swal.fire("Success", "OTP sent to your email", "success");
       }
     } catch (error) {
-      Swal.fire("Error", "Failed to send OTP", "error");
+      console.log(error);
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "An unexpected error occurred. Please try again later.";
+
+      Swal.fire({
+        icon: "warning",
+        title: "Error",
+        text: errorMessage,
+      });
     } finally {
       setOtpLoading(false);
     }
@@ -61,7 +89,16 @@ function ChangePassword({ setOpen }) {
       }
     } catch (error) {
       console.log(error);
-      Swal.fire("Error", "Invalid or expired OTP", "error");
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "An unexpected error occurred. Please try again later.";
+
+      Swal.fire({
+        icon: "warning",
+        title: "Error",
+        text: errorMessage,
+      });
     }
   };
 
@@ -85,9 +122,6 @@ function ChangePassword({ setOpen }) {
         title: "Password Successfully Changed!",
         text: "Proceed to Login",
       });
-      setOpen(null);
-      form.resetFields();
-      setValues({ otp: "", number: "", newPassword: "", email: "" });
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -97,6 +131,9 @@ function ChangePassword({ setOpen }) {
       });
     } finally {
       setLoading(false);
+      setOpen(null);
+      form.resetFields();
+      setValues({ otp: "", number: "", newPassword: "", email: "" });
     }
   };
 
@@ -107,11 +144,26 @@ function ChangePassword({ setOpen }) {
 
   return (
     <>
-      <Card title="Changing password">
+      <Card>
+        <Divider variant="solid" style={{ borderColor: "#4f46e5" }}>
+          <div
+            style={{
+              padding: "6px 16px",
+              borderRadius: "30px",
+              background: "#eef2ff",
+              fontFamily: "Raleway",
+              fontWeight: 600,
+              fontSize: 22,
+              color: "#4f46e5",
+            }}
+          >
+            <span>Change your password</span>
+          </div>
+        </Divider>
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           {" "}
           <Form.Item
-            label="Email Address"
+            label={<span style={labelStyle}>Email Address</span>}
             name="email"
             rules={[
               {
@@ -122,14 +174,17 @@ function ChangePassword({ setOpen }) {
           >
             <Space.Compact style={{ width: "100%" }}>
               <Input
-                placeholder="Enter Email Address"
                 onChange={(e) => handleChange("email", e.target.value)}
+                style={inputStyle}
               />
               <Popover title="Enter your email address to get your OTP">
                 <Button
                   onClick={getOtp}
                   disabled={values.otp}
                   loading={otpLoading}
+                  style={{
+                    height: 40,
+                  }}
                 >
                   {" "}
                   {timeLeft > 0 ? (
@@ -144,7 +199,7 @@ function ChangePassword({ setOpen }) {
             </Space.Compact>
           </Form.Item>
           <Form.Item
-            label="Enter OTP"
+            label={<span style={labelStyle}>Enter OTP</span>}
             name="otp"
             rules={[
               {
@@ -154,7 +209,6 @@ function ChangePassword({ setOpen }) {
             ]}
           >
             <Input.OTP
-              //formatter={(str) => str.toUpperCase()}
               disabled={otpSent ? false : true}
               onChange={(value) => handleChange("otp", value)}
             />{" "}
@@ -168,28 +222,28 @@ function ChangePassword({ setOpen }) {
             </span>
           )}
           <Form.Item
-            label="Sales ID"
-            name="number"
+            label={<span style={labelStyle}>Username</span>}
+            name="username"
             rules={[
               {
                 required: true,
-                message: "Sales ID required",
+                message: "This field is required",
               },
             ]}
           >
             <Input
-              placeholder="Enter Sales ID"
               onChange={(e) => handleChange("number", e.target.value)}
               disabled={otpVerified ? false : true}
+              style={inputStyle}
             />
           </Form.Item>
           <Form.Item
-            label="New Password"
+            label={<span style={labelStyle}>New Password</span>}
             name="newPassword"
             rules={[
               {
                 required: true,
-                message: "New Password required",
+                message: "This field is required",
               },
             ]}
           >
@@ -197,13 +251,13 @@ function ChangePassword({ setOpen }) {
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
-              placeholder="Enter new password"
               onChange={(e) => handleChange("newPassword", e.target.value)}
               disabled={otpVerified ? false : true}
+              style={inputStyle}
             />
           </Form.Item>
           <Form.Item
-            label="Re-enter New Password"
+            label={<span style={labelStyle}>Re-type Password</span>}
             name="confirmPassword"
             dependencies={["newPassword"]}
             hasFeedback
@@ -227,7 +281,7 @@ function ChangePassword({ setOpen }) {
               iconRender={(visible) =>
                 visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
-              placeholder="Re-enter your password"
+              style={inputStyle}
               disabled={otpVerified ? false : true}
             />
           </Form.Item>
@@ -237,9 +291,9 @@ function ChangePassword({ setOpen }) {
               htmlType="submit"
               loading={loading}
               style={{
-                width: "30%",
-                background: "purple",
-                height: 45,
+                width: "45%",
+                background: "#4c54b9",
+                height: 40,
                 fontSize: 16,
                 fontWeight: "bold",
               }}
@@ -250,8 +304,8 @@ function ChangePassword({ setOpen }) {
               type="primary"
               onClick={setClear}
               style={{
-                width: "30%",
-                height: 45,
+                width: "45%",
+                height: 40,
                 fontSize: 16,
                 fontWeight: "bold",
               }}

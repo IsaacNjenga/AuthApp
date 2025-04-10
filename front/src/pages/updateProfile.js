@@ -36,7 +36,7 @@ const labelStyle = {
   fontFamily: "Poppins",
 };
 
-function Home() {
+function UpdateProfile() {
   const { isMobile } = useContext(UserContext);
   const [values, setValues] = useState(initialValues);
 
@@ -60,48 +60,6 @@ function Home() {
           borderRadius: 20,
           padding: 22,
         }}
-        title={
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>
-              {" "}
-              <Button
-                type="primary"
-                style={{
-                  background: "#4f46e5",
-                  border: "none",
-                  padding: "15px 20px",
-                  marginRight: 10,
-                  borderRadius: 8,
-                }}
-                icon={<EditOutlined />}
-              >
-                <Link to="update-profile">Edit Details</Link>
-              </Button>
-            </div>
-            <div>
-              {" "}
-              <Button
-                danger
-                style={{
-                  background: "#ef4444",
-                  color: "#fff",
-                  border: "none",
-                  padding: "15px 20px",
-                  borderRadius: 8,
-                }}
-                icon={<DeleteOutlined />}
-              >
-                Delete Profile
-              </Button>
-            </div>
-          </div>
-        }
       >
         <Divider style={{ borderColor: "#4f46e5" }}>
           <div
@@ -115,7 +73,7 @@ function Home() {
               color: "#4f46e5",
             }}
           >
-            Your Profile Details
+            Edit Your Profile 
           </div>
         </Divider>
 
@@ -176,18 +134,35 @@ function Home() {
             />
           </Divider>
           <Form.Item style={{ textAlign: "center", marginTop: 24 }}>
-            <Button
+            <div
               style={{
-                background: "#6b7280",
-                color: "#fff",
-                border: "none",
-                padding: "15px 20px",
-                borderRadius: 8,
+                display: "flex",
+                gap: "15px",
               }}
-              icon={<PoweroffOutlined />}
             >
-              Logout
-            </Button>
+              <Button
+                style={{
+                  background: "green",
+                  color: "#fff",
+                  border: "none",
+                  padding: "15px 20px",
+                  borderRadius: 8,
+                }}
+              >
+                Update
+              </Button>
+              <Button
+                style={{
+                  background: "#ef4444",
+                  color: "#fff",
+                  border: "none",
+                  padding: "15px 20px",
+                  borderRadius: 8,
+                }}
+              >
+                <Link to="/">Cancel</Link>
+              </Button>
+            </div>
           </Form.Item>
         </Form>
       </Card>
@@ -195,4 +170,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default UpdateProfile;

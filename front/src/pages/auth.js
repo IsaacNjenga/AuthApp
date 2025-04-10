@@ -19,6 +19,7 @@ import ChangePassword from "../components/changePassword";
 
 const cookies = new Cookies();
 const { Title, Text } = Typography;
+
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -29,12 +30,21 @@ const initialValues = {
 };
 
 const inputStyle = {
-  background: 0,
-  border: "1px solid white",
+  backgroundColor: "#fff",
+  border: "1px solid #ccc",
   height: 40,
   fontSize: 14,
-  color: "white",
+  color: "#333",
   fontFamily: "Roboto",
+  borderRadius: 8,
+  paddingLeft: 10,
+};
+
+const labelStyle = {
+  color: "#111827",
+  fontSize: 16,
+  fontWeight: 500,
+  fontFamily: "Raleway",
 };
 function Auth() {
   const [form] = Form.useForm();
@@ -85,7 +95,12 @@ function Auth() {
 
   return (
     <>
-      <div className="auth-bg">
+      <div
+        className="auth-bg"
+        style={{
+          minHeight: "100vh",
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -152,8 +167,8 @@ function Auth() {
           >
             <Card
               style={{
-                background:
-                  "linear-gradient(to bottom, #e5c499 5%, #e2c9ab 90%)",
+                background: "#fff",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
                 maxWidth: 650,
                 margin: isSignUp ? "15px auto" : "125px auto",
                 height: "auto",
@@ -161,16 +176,19 @@ function Auth() {
               }}
               className="card"
             >
-              <Divider variant="solid" style={{ borderColor: "#fff" }}>
+              <Divider variant="solid" style={{ borderColor: "#4f46e5" }}>
                 <div
                   style={{
-                    margin: "1px auto",
-                    padding: "1px 5px",
-                    borderRadius: "15px",
+                    padding: "6px 16px",
+                    borderRadius: "30px",
+                    background: "#eef2ff",
                     fontFamily: "Raleway",
+                    fontWeight: 600,
+                    fontSize: 22,
+                    color: "#4f46e5",
                   }}
                 >
-                  <span style={{ color: "#fff", fontSize: 20 }}>
+                  <span>
                     {isSignUp
                       ? "Create your account"
                       : "Log in to your account"}
@@ -190,17 +208,7 @@ function Auth() {
                     >
                       {/* First Name */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            First Name
-                          </span>
-                        }
+                        label={<span style={labelStyle}>First Name</span>}
                         name="firstName"
                         rules={[
                           {
@@ -219,17 +227,7 @@ function Auth() {
                       </Form.Item>
                       {/* Last Name */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Last Name
-                          </span>
-                        }
+                        label={<span style={labelStyle}>Last Name</span>}
                         name="lastName"
                         rules={[
                           {
@@ -257,17 +255,7 @@ function Auth() {
                     >
                       {/* Username */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Username
-                          </span>
-                        }
+                        label={<span style={labelStyle}>Username</span>}
                         name="username"
                         rules={[
                           {
@@ -286,17 +274,7 @@ function Auth() {
                       </Form.Item>
                       {/* Email Address */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Email Address
-                          </span>
-                        }
+                        label={<span style={labelStyle}>Email Address</span>}
                         name="email"
                         rules={[
                           {
@@ -315,17 +293,7 @@ function Auth() {
                       </Form.Item>
                       {/* Phone Number */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Phone Number
-                          </span>
-                        }
+                        label={<span style={labelStyle}>Phone Number</span>}
                         name="phoneNumber"
                         rules={[
                           {
@@ -353,17 +321,7 @@ function Auth() {
                     >
                       {/* Password */}
                       <Form.Item
-                        label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Password
-                          </span>
-                        }
+                        label={<span style={labelStyle}>Password</span>}
                         name="password"
                         rules={[
                           {
@@ -393,15 +351,7 @@ function Auth() {
 
                       <Form.Item
                         label={
-                          <span
-                            style={{
-                              color: "#fff",
-                              fontSize: 18,
-                              fontFamily: "Roboto",
-                            }}
-                          >
-                            Re-enter password
-                          </span>
+                          <span style={labelStyle}>Re-enter password</span>
                         }
                         name="confirmPassword"
                         dependencies={["password"]}
@@ -447,17 +397,7 @@ function Auth() {
                   <>
                     {/* Username */}
                     <Form.Item
-                      label={
-                        <span
-                          style={{
-                            color: "#fff",
-                            fontSize: 18,
-                            fontFamily: "Roboto",
-                          }}
-                        >
-                          Username
-                        </span>
-                      }
+                      label={<span style={labelStyle}>Username</span>}
                       name="username"
                       rules={[
                         { required: true, message: "This field is required" },
@@ -472,17 +412,7 @@ function Auth() {
                       />
                     </Form.Item>
                     <Form.Item
-                      label={
-                        <span
-                          style={{
-                            color: "#fff",
-                            fontSize: 18,
-                            fontFamily: "Roboto",
-                          }}
-                        >
-                          Password
-                        </span>
-                      }
+                      label={<span style={labelStyle}>Password</span>}
                       name="password"
                       rules={[
                         { required: true, message: "This field is required" },
@@ -514,7 +444,7 @@ function Auth() {
                   }}
                 >
                   <div>
-                    <p style={{ color: "white", fontFamily: "Roboto" }}>
+                    <p style={{ color: "#333", fontFamily: "Roboto" }}>
                       {isSignUp
                         ? "Already have an account?"
                         : "Don't have an account?"}{" "}
@@ -532,7 +462,7 @@ function Auth() {
                   <div style={{ display: isSignUp ? "none" : "block" }}>
                     <p
                       style={{
-                        color: "white",
+                        color: "#333",
                         fontFamily: "Roboto",
                         cursor: "pointer",
                       }}
@@ -541,16 +471,10 @@ function Auth() {
                       Forgot password?
                     </p>{" "}
                     <Drawer
-                      title="Change your password"
-                      width={600}
+                      width={650}
                       onClose={closeDrawer}
                       open={open}
                       styles={{ body: { paddingBottom: 60 } }}
-                      extra={
-                        <Space>
-                          <Button onClick={closeDrawer}>Cancel</Button>
-                        </Space>
-                      }
                     >
                       <ChangePassword setOpen={setOpen} />
                     </Drawer>
@@ -570,12 +494,13 @@ function Auth() {
                     type="primary"
                     style={{
                       background: "rgb(0,0,0,0)",
-                      border: "2px solid white",
+                      border: "2px solid #333",
                       height: 40,
                       fontSize: 14,
                       fontWeight: "bold",
                       width: "50%",
                       fontFamily: "Raleway",
+                      color: "#333",
                     }}
                   >
                     {loading
