@@ -9,7 +9,8 @@ import UpdateProfile from "./pages/updateProfile.js";
 export const UserContext = createContext();
 const cookies = new Cookie();
 
-axios.defaults.baseURL = "http://localhost:3001/AuthApp";
+//axios.defaults.baseURL = "http://localhost:3001/AuthApp";
+axios.defaults.baseURL = "https://auth-app-back.vercel.app/AuthApp";
 axios.defaults.withCredentials = true;
 
 const authToken = cookies.get("token");
