@@ -1,13 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import "../assets/css/auth.css";
 import { Button, Card, Divider, Form, Input } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PoweroffOutlined,
-} from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
 
 const inputStyle = {
   backgroundColor: "#fff",
@@ -37,7 +31,6 @@ const labelStyle = {
 };
 
 function UpdateProfile() {
-  const { isMobile } = useContext(UserContext);
   const [values, setValues] = useState(initialValues);
 
   return (

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/css/auth.css";
 import { Button, Card, Divider, Form, Input } from "antd";
 import {
@@ -7,7 +7,11 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
+import Cookie from "universal-cookie";
+import Swal from "sweetalert2";
+import UseFetchUser from "../assets/hooks/useFetchUser";
+
+const cookies = new Cookie();
 
 const inputStyle = {
   backgroundColor: "#fff",
@@ -37,8 +41,52 @@ const labelStyle = {
 };
 
 function Home() {
-  const { isMobile } = useContext(UserContext);
+  const { userData, userLoading } = UseFetchUser();
   const [values, setValues] = useState(initialValues);
+  const [form] = Form.useForm();
+
+  console.log(userData);
+  React.useEffect(() => {
+    if (userData) {
+      setValues({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
+        username: userData.username,
+        phoneNumber: userData.phoneNumber,
+      });
+      form.setFieldsValue({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        password: userData.password,
+        username: userData.username,
+        phoneNumber: userData.phoneNumber,
+      });
+    }
+  }, [userData, form]);
+
+  const handleLogout = () => {
+    Swal.fire({
+      icon: "warning",
+      text: "Are you sure you want to logout?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const allCookies = cookies.getAll();
+        for (const cookieName in allCookies) {
+          if (allCookies.hasOwnProperty(cookieName)) {
+            cookies.remove(cookieName);
+          }
+        }
+        window.location.reload();
+      }
+    });
+  };
 
   return (
     <div
@@ -81,7 +129,7 @@ function Home() {
                 }}
                 icon={<EditOutlined />}
               >
-                <Link to="update-profile">Edit Details</Link>
+                <Link to={`/update-profile/${userData._id}`}>Edit Details</Link>
               </Button>
             </div>
             <div>
@@ -119,7 +167,7 @@ function Home() {
           </div>
         </Divider>
 
-        <Form layout="vertical" initialValues={initialValues}>
+        <Form layout="vertical" initialValues={values} form={form}>
           <div
             style={{
               display: "grid",
@@ -131,35 +179,35 @@ function Home() {
               label={<span style={labelStyle}>First Name</span>}
               name="firstName"
             >
-              <Input value={values.firstName} style={inputStyle} />
+              <Input value={values.firstName} style={inputStyle} readOnly />
             </Form.Item>
 
             <Form.Item
               label={<span style={labelStyle}>Last Name</span>}
               name="lastName"
             >
-              <Input value={values.lastName} style={inputStyle} />
+              <Input value={values.lastName} style={inputStyle} readOnly />
             </Form.Item>
 
             <Form.Item
               label={<span style={labelStyle}>Username</span>}
               name="username"
             >
-              <Input value={values.username} style={inputStyle} />
+              <Input value={values.username} style={inputStyle} readOnly />
             </Form.Item>
 
             <Form.Item
               label={<span style={labelStyle}>Email Address</span>}
               name="email"
             >
-              <Input value={values.email} style={inputStyle} />
+              <Input value={values.email} style={inputStyle} readOnly />
             </Form.Item>
 
             <Form.Item
               label={<span style={labelStyle}>Phone Number</span>}
               name="phoneNumber"
             >
-              <Input value={values.phoneNumber} style={inputStyle} />
+              <Input value={values.phoneNumber} style={inputStyle} readOnly />
             </Form.Item>
           </div>
 
@@ -185,6 +233,7 @@ function Home() {
                 borderRadius: 8,
               }}
               icon={<PoweroffOutlined />}
+              onClick={handleLogout}
             >
               Logout
             </Button>

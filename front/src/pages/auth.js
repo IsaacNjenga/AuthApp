@@ -1,20 +1,10 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Divider,
-  Drawer,
-  Form,
-  Input,
-  Space,
-  Typography,
-} from "antd";
+import { Button, Card, Divider, Drawer, Form, Input, Typography } from "antd";
 import Swal from "sweetalert2";
 import Cookies from "universal-cookie";
 import "../assets/css/auth.css";
-import { UserContext } from "../App";
 import ChangePassword from "../components/changePassword";
 
 const cookies = new Cookies();
@@ -48,11 +38,17 @@ const labelStyle = {
 };
 function Auth() {
   const [form] = Form.useForm();
-  const { isMobile } = useContext(UserContext);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [values, setValues] = useState(initialValues);
   const [isSignUp, setSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const showDrawer = () => {
     setOpen(true);
@@ -73,7 +69,26 @@ function Auth() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log(values);
+      const res = await axios.post(`${isSignUp ? "sign-up" : "sign-in"}`, {
+        ...values,
+      });
+      const { success, token, user } = res.data;
+      if (success) {
+        Swal.fire({
+          icon: "success",
+          title: isSignUp ? "Account Created Successfully" : "Login successful",
+        });
+
+        cookies.set("token", token);
+        cookies.set("userId", user._id);
+        cookies.set("username", user.username);
+        // cookies.set("firstName", user.firstName);
+        // cookies.set("lastName", user.lastName);
+        // cookies.set("email", user.email);
+        // cookies.set("phoneNumber", user.phoneNumber);
+
+        window.location.reload();
+      }
     } catch (error) {
       console.log(error);
       const errorMessage =
