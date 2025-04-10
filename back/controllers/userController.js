@@ -103,7 +103,18 @@ const fetchUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ error: "No user ID found " });
+  }
   try {
+    const objectId = new mongoose.Types.ObjectId(id);
+    const updatedProfile = await UserModel.findByIdAndUpdate(
+      { _id: objectId },
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json({ success: true, updatedProfile });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
@@ -111,7 +122,18 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "No user ID found " });
+  }
   try {
+    const objectId = new mongoose.Types.ObjectId(id);
+    const deletedUser = await UserModel.findByIdAndDelete(objectId); 
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User  not found" });
+    }
+
+    res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });

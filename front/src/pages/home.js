@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import "../assets/css/auth.css";
-import { Button, Card, Divider, Form, Input } from "antd";
+import { Button, Card, Divider, Form, Input, Spin } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import Cookie from "universal-cookie";
 import Swal from "sweetalert2";
 import UseFetchUser from "../assets/hooks/useFetchUser";
+import { UserContext } from "../App";
+import axios from "axios";
 
 const cookies = new Cookie();
 
@@ -28,7 +30,6 @@ const initialValues = {
   firstName: "",
   lastName: "",
   email: "",
-  password: "",
   username: "",
   phoneNumber: "",
 };
@@ -44,8 +45,8 @@ function Home() {
   const { userData, userLoading } = UseFetchUser();
   const [values, setValues] = useState(initialValues);
   const [form] = Form.useForm();
+  const { user } = useContext(UserContext);
 
-  console.log(userData);
   React.useEffect(() => {
     if (userData) {
       setValues({
@@ -84,6 +85,34 @@ function Home() {
           }
         }
         window.location.reload();
+      }
+    });
+  };
+
+  const handleDelete = () => {
+    Swal.fire({
+      icon: "warning",
+      text: "Are you sure you want to delete your profile?",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await axios.delete(`delete-profile?id=${user}`);
+        if (res.data.success) {
+          Swal.fire({ icon: "success", text: "Profile successfully deleted" });
+
+          setTimeout(() => {
+            const allCookies = cookies.getAll();
+            for (const cookieName in allCookies) {
+              if (allCookies.hasOwnProperty(cookieName)) {
+                cookies.remove(cookieName);
+              }
+            }
+            window.location.reload();
+          }, 3000);
+        }
       }
     });
   };
@@ -144,6 +173,7 @@ function Home() {
                   borderRadius: 8,
                 }}
                 icon={<DeleteOutlined />}
+                onClick={handleDelete}
               >
                 Delete Profile
               </Button>
@@ -166,79 +196,85 @@ function Home() {
             Your Profile Details
           </div>
         </Divider>
-
-        <Form layout="vertical" initialValues={values} form={form}>
-          <div
-            style={{
-              display: "grid",
-              gap: "20px",
-              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-            }}
-          >
-            <Form.Item
-              label={<span style={labelStyle}>First Name</span>}
-              name="firstName"
-            >
-              <Input value={values.firstName} style={inputStyle} readOnly />
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>Last Name</span>}
-              name="lastName"
-            >
-              <Input value={values.lastName} style={inputStyle} readOnly />
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>Username</span>}
-              name="username"
-            >
-              <Input value={values.username} style={inputStyle} readOnly />
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>Email Address</span>}
-              name="email"
-            >
-              <Input value={values.email} style={inputStyle} readOnly />
-            </Form.Item>
-
-            <Form.Item
-              label={<span style={labelStyle}>Phone Number</span>}
-              name="phoneNumber"
-            >
-              <Input value={values.phoneNumber} style={inputStyle} readOnly />
-            </Form.Item>
-          </div>
-
-          <Divider style={{ borderColor: "#4f46e5" }}>
+        {userLoading ? (
+          <Spin
+            size="large"
+            style={{ display: "block", margin: "50px auto" }}
+          />
+        ) : (
+          <Form layout="vertical" initialValues={values} form={form}>
             <div
               style={{
-                padding: "6px 16px",
-                borderRadius: "30px",
-                fontFamily: "Poppins",
-                fontWeight: 600,
-                fontSize: 22,
-                color: "#4f46e5",
+                display: "grid",
+                gap: "20px",
+                gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
               }}
-            />
-          </Divider>
-          <Form.Item style={{ textAlign: "center", marginTop: 24 }}>
-            <Button
-              style={{
-                background: "#6b7280",
-                color: "#fff",
-                border: "none",
-                padding: "15px 20px",
-                borderRadius: 8,
-              }}
-              icon={<PoweroffOutlined />}
-              onClick={handleLogout}
             >
-              Logout
-            </Button>
-          </Form.Item>
-        </Form>
+              <Form.Item
+                label={<span style={labelStyle}>First Name</span>}
+                name="firstName"
+              >
+                <Input value={values.firstName} style={inputStyle} readOnly />
+              </Form.Item>
+
+              <Form.Item
+                label={<span style={labelStyle}>Last Name</span>}
+                name="lastName"
+              >
+                <Input value={values.lastName} style={inputStyle} readOnly />
+              </Form.Item>
+
+              <Form.Item
+                label={<span style={labelStyle}>Username</span>}
+                name="username"
+              >
+                <Input value={values.username} style={inputStyle} readOnly />
+              </Form.Item>
+
+              <Form.Item
+                label={<span style={labelStyle}>Email Address</span>}
+                name="email"
+              >
+                <Input value={values.email} style={inputStyle} readOnly />
+              </Form.Item>
+
+              <Form.Item
+                label={<span style={labelStyle}>Phone Number</span>}
+                name="phoneNumber"
+              >
+                <Input value={values.phoneNumber} style={inputStyle} readOnly />
+              </Form.Item>
+            </div>
+
+            <Divider style={{ borderColor: "#4f46e5" }}>
+              <div
+                style={{
+                  padding: "6px 16px",
+                  borderRadius: "30px",
+                  fontFamily: "Poppins",
+                  fontWeight: 600,
+                  fontSize: 22,
+                  color: "#4f46e5",
+                }}
+              />
+            </Divider>
+            <Form.Item style={{ textAlign: "center", marginTop: 24 }}>
+              <Button
+                style={{
+                  background: "#6b7280",
+                  color: "#fff",
+                  border: "none",
+                  padding: "15px 20px",
+                  borderRadius: 8,
+                }}
+                icon={<PoweroffOutlined />}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </Form.Item>
+          </Form>
+        )}
       </Card>
     </div>
   );
