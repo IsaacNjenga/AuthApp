@@ -22,6 +22,42 @@ const labelStyle = {
   fontFamily: "Raleway",
 };
 
+const passwordStrengthChecks = [
+  {
+    label: "At least 8 characters",
+    test: (pwd) => pwd.length >= 8,
+  },
+  {
+    label: "One uppercase letter",
+    test: (pwd) => /[A-Z]/.test(pwd),
+  },
+  {
+    label: "One lowercase letter",
+    test: (pwd) => /[a-z]/.test(pwd),
+  },
+  {
+    label: "One number",
+    test: (pwd) => /\d/.test(pwd),
+  },
+  {
+    label: "One symbol (@$!%*?&...)",
+    test: (pwd) => /[@$!%*?&#^()[\]{}]/.test(pwd),
+  },
+];
+
+const renderPasswordFeedback = (password) => (
+  <div style={{ marginTop: 8 }}>
+    {passwordStrengthChecks.map(({ label, test }) => (
+      <div
+        key={label}
+        style={{ fontSize: 13, color: test(password) ? "green" : "red" }}
+      >
+        {test(password) ? "✔️" : "❌"} {label}
+      </div>
+    ))}
+  </div>
+);
+
 function ChangePassword({ setOpen }) {
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -268,14 +304,17 @@ function ChangePassword({ setOpen }) {
               },
             ]}
           >
-            <Input.Password
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-              onChange={(e) => handleChange("newPassword", e.target.value)}
-              disabled={otpVerified ? false : true}
-              style={inputStyle}
-            />
+            <>
+              <Input.Password
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                onChange={(e) => handleChange("newPassword", e.target.value)}
+                disabled={otpVerified ? false : true}
+                style={inputStyle}
+              />
+              {renderPasswordFeedback(values.password)}
+            </>
           </Form.Item>
           <Form.Item
             label={<span style={labelStyle}>Re-type Password</span>}

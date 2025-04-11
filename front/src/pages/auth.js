@@ -36,6 +36,43 @@ const labelStyle = {
   fontWeight: 500,
   fontFamily: "Raleway",
 };
+
+const passwordStrengthChecks = [
+  {
+    label: "At least 8 characters",
+    test: (pwd) => pwd.length >= 8,
+  },
+  {
+    label: "One uppercase letter",
+    test: (pwd) => /[A-Z]/.test(pwd),
+  },
+  {
+    label: "One lowercase letter",
+    test: (pwd) => /[a-z]/.test(pwd),
+  },
+  {
+    label: "One number",
+    test: (pwd) => /\d/.test(pwd),
+  },
+  {
+    label: "One symbol (@$!%*?&...)",
+    test: (pwd) => /[@$!%*?&#^()[\]{}]/.test(pwd),
+  },
+];
+
+const renderPasswordFeedback = (password) => (
+  <div style={{ marginTop: 8 }}>
+    {passwordStrengthChecks.map(({ label, test }) => (
+      <div
+        key={label}
+        style={{ fontSize: 13, color: test(password) ? "green" : "red" }}
+      >
+        {test(password) ? "✔️" : "❌"} {label}
+      </div>
+    ))}
+  </div>
+);
+
 function Auth() {
   const [form] = Form.useForm();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -359,20 +396,25 @@ function Auth() {
                           },
                         ]}
                       >
-                        <Input.Password
-                          iconRender={(visible) =>
-                            visible ? (
-                              <EyeTwoTone style={{ color: "white" }} />
-                            ) : (
-                              <EyeInvisibleOutlined style={{ color: "#333" }} />
-                            )
-                          }
-                          onChange={(e) =>
-                            handleChange("password", e.target.value)
-                          }
-                          value={values.password}
-                          style={inputStyle}
-                        />
+                        <>
+                          <Input.Password
+                            iconRender={(visible) =>
+                              visible ? (
+                                <EyeTwoTone style={{ color: "white" }} />
+                              ) : (
+                                <EyeInvisibleOutlined
+                                  style={{ color: "#333" }}
+                                />
+                              )
+                            }
+                            onChange={(e) =>
+                              handleChange("password", e.target.value)
+                            }
+                            value={values.password}
+                            style={inputStyle}
+                          />
+                          {renderPasswordFeedback(values.password)}
+                        </>
                       </Form.Item>
 
                       {/* Confirm Password */}
