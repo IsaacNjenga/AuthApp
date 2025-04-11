@@ -313,7 +313,7 @@ function ChangePassword({ setOpen }) {
                 disabled={otpVerified ? false : true}
                 style={inputStyle}
               />
-              {renderPasswordFeedback(values.password)}
+              {/* {renderPasswordFeedback(values.password)} */}
             </>
           </Form.Item>
           <Form.Item

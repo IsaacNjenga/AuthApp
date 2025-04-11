@@ -413,7 +413,7 @@ function Auth() {
                             value={values.password}
                             style={inputStyle}
                           />
-                          {renderPasswordFeedback(values.password)}
+                          {/* {renderPasswordFeedback(values.password)} */}
                         </>
                       </Form.Item>
 
