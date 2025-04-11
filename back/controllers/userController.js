@@ -128,7 +128,7 @@ const deleteUser = async (req, res) => {
   }
   try {
     const objectId = new mongoose.Types.ObjectId(id);
-    const deletedUser = await UserModel.findByIdAndDelete(objectId); 
+    const deletedUser = await UserModel.findByIdAndDelete(objectId);
     if (!deletedUser) {
       return res.status(404).json({ error: "User  not found" });
     }
@@ -140,4 +140,29 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { register, login, fetchUser, updateUser, deleteUser };
+const passwordChange = async (req, res) => {
+  const { newPassword, username } = req.body;
+  console.log(username);
+  try {
+    const hashPassword = await bcrypt.hash(newPassword, 12);
+    const user = await UserModel.findOneAndUpdate(
+      { username },
+      { $set: { password: hashPassword } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: `User under '${username}' not found` });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "Password changed successfully!" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export { register, login, fetchUser, updateUser, deleteUser, passwordChange };

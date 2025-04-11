@@ -79,13 +79,11 @@ function Auth() {
           title: isSignUp ? "Account Created Successfully" : "Login successful",
         });
 
-        cookies.set("token", token);
-        cookies.set("userId", user._id);
-        cookies.set("username", user.username);
-        // cookies.set("firstName", user.firstName);
-        // cookies.set("lastName", user.lastName);
-        // cookies.set("email", user.email);
-        // cookies.set("phoneNumber", user.phoneNumber);
+        if (!isSignUp) {
+          cookies.set("token", token);
+          cookies.set("userId", user._id);
+          cookies.set("username", user.username);
+        }
 
         window.location.reload();
       }
@@ -343,6 +341,22 @@ function Auth() {
                             required: true,
                             message: "This field is required",
                           },
+                          {
+                            pattern:
+                              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()[\]{}])[A-Za-z\d@$!%*?&#^()[\]{}]{8,}$/,
+                            message: (
+                              <span>
+                                <ul>
+                                  - Password must include:
+                                  <li>An uppercase character</li>
+                                  <li>A lowercase character</li>
+                                  <li>A number</li>
+                                  <li>A symbol</li>
+                                  <li>At least 8 characters long</li>
+                                </ul>
+                              </span>
+                            ),
+                          },
                         ]}
                       >
                         <Input.Password
@@ -360,6 +374,7 @@ function Auth() {
                           style={inputStyle}
                         />
                       </Form.Item>
+
                       {/* Confirm Password */}
 
                       <Form.Item

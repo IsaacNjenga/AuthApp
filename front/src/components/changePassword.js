@@ -30,7 +30,7 @@ function ChangePassword({ setOpen }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [values, setValues] = useState({
     otp: "",
-    number: "",
+    username: "",
     newPassword: "",
     email: "",
   });
@@ -114,7 +114,7 @@ function ChangePassword({ setOpen }) {
     setLoading(true);
     try {
       await axios.post("password-change", {
-        number: values.number,
+        username: values.username,
         newPassword: values.newPassword,
       });
       Swal.fire({
@@ -124,22 +124,27 @@ function ChangePassword({ setOpen }) {
       });
     } catch (error) {
       console.log(error);
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "An unexpected error occurred. Please try again later.";
+
       Swal.fire({
         icon: "warning",
-        title: "Password Change Failed!",
-        text: "Password could not be changed",
+        title: "Error",
+        text: errorMessage,
       });
     } finally {
       setLoading(false);
       setOpen(null);
       form.resetFields();
-      setValues({ otp: "", number: "", newPassword: "", email: "" });
+      setValues({ otp: "", username: "", newPassword: "", email: "" });
     }
   };
 
   const setClear = () => {
     form.resetFields();
-    setValues({ otp: "", number: "", newPassword: "", email: "" });
+    setValues({ otp: "", username: "", newPassword: "", email: "" });
   };
 
   return (
@@ -232,7 +237,7 @@ function ChangePassword({ setOpen }) {
             ]}
           >
             <Input
-              onChange={(e) => handleChange("number", e.target.value)}
+              onChange={(e) => handleChange("username", e.target.value)}
               disabled={otpVerified ? false : true}
               style={inputStyle}
             />
@@ -244,6 +249,22 @@ function ChangePassword({ setOpen }) {
               {
                 required: true,
                 message: "This field is required",
+              },
+              {
+                pattern:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()[\]{}])[A-Za-z\d@$!%*?&#^()[\]{}]{8,}$/,
+                message: (
+                  <span>
+                    <ul>
+                      - Password must include:
+                      <li>An uppercase character</li>
+                      <li>A lowercase character</li>
+                      <li>A number</li>
+                      <li>A symbol</li>
+                      <li>At least 8 characters long</li>
+                    </ul>
+                  </span>
+                ),
               },
             ]}
           >
